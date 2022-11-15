@@ -1,24 +1,33 @@
 import './css/styles.css';
-// import fetchCountries from './fetchCountries';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import getRefs from './get-refs';
+import fetchCountries from './fetchCountries';
+import debounce from 'lodash.debounce';
 
 const DEBOUNCE_DELAY = 300;
 
-const listCountries = document.querySelector('.country-list');
+const refs = getRefs();
 
-// const ukr = fetch('https://restcountries.com/v3.1/name/ukraine?fullText=true');
-// const ukr = fetch('https://restcountries.com/v2/all?fields=name.official,capital,population,flags.svg,languages');
-const ukr = fetch('https://restcountries.com/v2/name/austria?fields=name,capital,population,flags,languages');
+refs.searchBox.addEventListener('input', debounce(searchCountry, DEBOUNCE_DELAY));
 
-// name.official - повна назва країни
-// capital - столиця
-// population - населення
-// flags.svg - посилання на зображення прапора
-// languages - масив мов
+function searchCountry(event) {
+    console.log(event.target.value);
+    const searchingCountry = event.target.value;
 
+    fetchCountries(searchingCountry)
+        .then(country => {createMarkupForCountries(country);
+            Notify.success("Too many matches found. Please enter a more specific name.");
+            Notify.failure("Oops, there is no country with that name");
+        })
+        .catch(error => {
+            console.log(error);
+        });
+};
 
 function createMarkupForCountries(countriesArray) {
     const markup = countriesArray.map(country => {
         const { flags, name, capital, population, languages } = country;
+
         const itemEl = document.createElement('li');
         const flagEl = document.createElement('img');
         flagEl.src = flags.svg;
@@ -27,11 +36,11 @@ function createMarkupForCountries(countriesArray) {
         const nameEl = document.createElement('h3');
         nameEl.textContent = name;
         const capitalEl = document.createElement('p');
-        capitalEl.textContent = capital;
+        capitalEl.textContent = `Capital: ${capital}`;
         const populationEl = document.createElement('p');
-        populationEl.textContent = population;
+        populationEl.textContent = `Population: ${population}`;
         const languagesEl = document.createElement('p');
-        languagesEl.textContent = languages;
+        languagesEl.textContent = `Languages: ${(languages.map(language => language.name)).join(', ')}`;
 
         itemEl.append(flagEl);
         itemEl.append(nameEl);
@@ -41,25 +50,20 @@ function createMarkupForCountries(countriesArray) {
 
         return itemEl;
     });
-    listCountries.append(...markup);
+    refs.listCountries.append(...markup);
 };
 
+// const ukr = fetch(`https://restcountries.com/v2/name/ukraine?fields=name,capital,population,flags,languages`);
 
-ukr
-    .then(response => {
-        return response.json();
-    })
-    .then(country => {
-        console.log(country);
-        console.log(country[0]);
-        console.log(country[0].flags.svg);
-        console.log(country[0].name);
-        console.log(country[0].capital);
-        console.log(country[0].population);
-        console.log(country[0].languages);
-        // const { flags, name, capital, population, languages } = country;
-        createMarkupForCountries(country);
-    })
-    .catch(error => {
-        console.log(error)
-    });
+// ukr
+//     .then(response => {
+//         return response.json();
+//     })
+//     .then(country => {
+//         createMarkupForCountries(country);
+//         Notify.success("Too many matches found. Please enter a more specific name.");
+//         Notify.failure("Oops, there is no country with that name");
+//     })
+//     .catch(error => {
+//         console.log(error);
+//     });
