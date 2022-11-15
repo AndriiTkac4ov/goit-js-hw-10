@@ -1,4 +1,5 @@
 import './css/styles.css';
+// import fetchCountries from './fetchCountries';
 
 const DEBOUNCE_DELAY = 300;
 
@@ -6,7 +7,7 @@ const listCountries = document.querySelector('.country-list');
 
 // const ukr = fetch('https://restcountries.com/v3.1/name/ukraine?fullText=true');
 // const ukr = fetch('https://restcountries.com/v2/all?fields=name.official,capital,population,flags.svg,languages');
-const ukr = fetch('https://restcountries.com/v3.1/name/ukraine?fullText=true&fields=name.official,capital,population,flags,languages');
+const ukr = fetch('https://restcountries.com/v2/name/austria?fields=name,capital,population,flags,languages');
 
 // name.official - повна назва країни
 // capital - столиця
@@ -15,39 +16,22 @@ const ukr = fetch('https://restcountries.com/v3.1/name/ukraine?fullText=true&fie
 // languages - масив мов
 
 
-ukr
-    .then(response => {
-        return response.json();
-    })
-    .then(country => {
-        console.log(country);
-        console.log(country[0].flags.svg);
-        console.log(country[0].name);
-        console.log(country[0].capital);
-        console.log(country[0].population);
-        console.log(country[0].languages);
-        // const { nameOfficial, capital, population, languages } = country;
-        createMarkupForCountries(country);
-    })
-    .catch(error => {
-        console.log(error)
-    });
-
 function createMarkupForCountries(countriesArray) {
-    const markup = countriesArray.map(({ nameOfficial, capital, population, languages }) => {
+    const markup = countriesArray.map(country => {
+        const { flags, name, capital, population, languages } = country;
         const itemEl = document.createElement('li');
         const flagEl = document.createElement('img');
-        flagEl.src = 'https://flagcdn.com/ua.svg';
+        flagEl.src = flags.svg;
         flagEl.alt = 'flag';
-        // flagEl.setAttribute('width="60"');
+        flagEl.width = '60';
         const nameEl = document.createElement('h3');
-        nameEl.textContent = nameOfficial;
+        nameEl.textContent = name;
         const capitalEl = document.createElement('p');
         capitalEl.textContent = capital;
         const populationEl = document.createElement('p');
-        capitalEl.textContent = population;
+        populationEl.textContent = population;
         const languagesEl = document.createElement('p');
-        capitalEl.textContent = languages;
+        languagesEl.textContent = languages;
 
         itemEl.append(flagEl);
         itemEl.append(nameEl);
@@ -60,4 +44,22 @@ function createMarkupForCountries(countriesArray) {
     listCountries.append(...markup);
 };
 
-{/* <img src="https://res.cloudinary.com/goit-academy/image/upload/v1614773221/codepen/ukraine.svg" alt="Ukraine" width="60"></img> */}
+
+ukr
+    .then(response => {
+        return response.json();
+    })
+    .then(country => {
+        console.log(country);
+        console.log(country[0]);
+        console.log(country[0].flags.svg);
+        console.log(country[0].name);
+        console.log(country[0].capital);
+        console.log(country[0].population);
+        console.log(country[0].languages);
+        // const { flags, name, capital, population, languages } = country;
+        createMarkupForCountries(country);
+    })
+    .catch(error => {
+        console.log(error)
+    });
