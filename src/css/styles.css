@@ -22,3 +22,15 @@ body {
 .country-list {
   list-style: none;
 }
+
+.country-item {
+  display: flex;
+}
+
+.country-item:not(:last-child) {
+  margin-bottom: 8px;
+}
+
+.country-flag {
+  margin-right: 16px;
+}

@@ -15,7 +15,13 @@ function searchCountry(event) {
     const searchingCountry = event.target.value;
 
     fetchCountries(searchingCountry)
-        .then(country => {createMarkupForCountries(country);
+        .then(country => {
+            // if (condition) {
+                createMarkupForCountries(country);
+            // };
+            // if (condition) {
+                createCardForCountry(country);
+            // };
             Notify.success("Too many matches found. Please enter a more specific name.");
             Notify.failure("Oops, there is no country with that name");
         })
@@ -25,7 +31,27 @@ function searchCountry(event) {
 };
 
 function createMarkupForCountries(countriesArray) {
-    const markup = countriesArray.map(country => {
+    const markup = countriesArray.map(({ flags, name }) => {
+        const itemEl = document.createElement('li');
+        itemEl.classList.add('country-item');
+        const flagEl = document.createElement('img');
+        flagEl.classList.add('country-flag');
+        flagEl.src = flags.svg;
+        flagEl.alt = 'flag';
+        flagEl.width = '60';
+        const nameEl = document.createElement('h3');
+        nameEl.textContent = name;
+
+        itemEl.append(flagEl);
+        itemEl.append(nameEl);
+
+        return itemEl;
+    });
+    refs.listCountries.append(...markup);
+};
+
+function createCardForCountry(countryArray) {
+    const markup = countryArray.map(country => {
         const { flags, name, capital, population, languages } = country;
 
         const itemEl = document.createElement('li');
@@ -50,7 +76,7 @@ function createMarkupForCountries(countriesArray) {
 
         return itemEl;
     });
-    refs.listCountries.append(...markup);
+    refs.countryInfo.append(...markup);
 };
 
 // const ukr = fetch(`https://restcountries.com/v2/name/ukraine?fields=name,capital,population,flags,languages`);
