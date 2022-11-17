@@ -62,12 +62,24 @@ function createCardForCountry(countryArray) {
         flagEl.width = '60';
         const nameEl = document.createElement('h1');
         nameEl.textContent = name;
+
+        const bForCapital = document.createElement('b');
+        bForCapital.textContent = 'Capital: ';
         const capitalEl = document.createElement('p');
-        capitalEl.textContent = `Capital: ${capital}`;
+        capitalEl.textContent = `${capital}`;
+        capitalEl.prepend(bForCapital);
+
+        const bForPopulation = document.createElement('b');
+        bForPopulation.textContent = 'Population: ';
         const populationEl = document.createElement('p');
-        populationEl.textContent = `Population: ${population}`;
+        populationEl.textContent = `${population}`;
+        populationEl.prepend(bForPopulation);
+
+        const bForlanguages = document.createElement('b');
+        bForlanguages.textContent = 'Languages: ';
         const languagesEl = document.createElement('p');
-        languagesEl.textContent = `Languages: ${(languages.map(language => language.name)).join(', ')}`;
+        languagesEl.textContent = `${(languages.map(language => language.name)).join(', ')}`;
+        languagesEl.prepend(bForlanguages);
 
         itemEl.append(flagEl, nameEl);
 

@@ -23,7 +23,8 @@ body {
   list-style: none;
 }
 
-.country-item {
+.country-item,
+.country-header {
   display: flex;
 }
 
@@ -33,8 +34,4 @@ body {
 
 .country-flag {
   margin-right: 16px;
-}
-
-.country-header {
-  display: flex;
 }
