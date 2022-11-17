@@ -13,23 +13,21 @@ refs.searchBox.addEventListener('input', debounce(searchCountry, DEBOUNCE_DELAY)
 function searchCountry(event) {
     const searchingCountry = event.target.value.trim();
 
+    clearPreviousInfo();
+
     if (searchingCountry === '') {
-        clearPreviousInfo();
         return;
     };
 
     fetchCountries(searchingCountry)
         .then(country => {
             if (country.length > 10) {
-                clearPreviousInfo();
                 return Notify.info("Too many matches found. Please enter a more specific name.");
             };
             if (country.length <= 10 && country.length >= 2) {
-                clearPreviousInfo();
                 return createMarkupForCountries(country);
             };
             if (country.length === 1) {
-                clearPreviousInfo();
                 return createCardForCountry(country);
             };
         })
